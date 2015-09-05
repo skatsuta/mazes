@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/skatsuta/mazes/go/alg/binarytree"
+	"github.com/skatsuta/mazes/go/alg"
 	"github.com/skatsuta/mazes/go/maze"
 )
 
@@ -19,10 +19,12 @@ func init() {
 func main() {
 	grid := maze.NewGrid(row, col)
 
+	var algorithm alg.Algorithm
 	switch flag.Arg(0) {
 	case "binarytree":
-		binarytree.On(grid)
+		algorithm = alg.NewBinaryTree()
 	}
 
+	algorithm.On(grid)
 	fmt.Println(grid.String())
 }

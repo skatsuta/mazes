@@ -1,4 +1,4 @@
-package binarytree
+package alg
 
 import (
 	"math/rand"
@@ -7,8 +7,21 @@ import (
 	"github.com/skatsuta/mazes/go/maze"
 )
 
+// binaryTree is a binary tree algorithm.
+// It implements Algorithm interface.
+type binaryTree struct {
+	r *rand.Rand
+}
+
+// NewBinaryTree returns a new binary tree Algorithm.
+func NewBinaryTree() Algorithm {
+	return binaryTree{
+		r: rand.New(rand.NewSource(time.Now().UnixNano())),
+	}
+}
+
 // On generates a maze on a given grid by using a binary tree algorithm.
-func On(grid *maze.Grid) {
+func (bt binaryTree) On(grid *maze.Grid) {
 	for _, cell := range grid.EachCell() {
 		var neighbors []*maze.Cell
 		if cell.North != nil {
@@ -22,8 +35,7 @@ func On(grid *maze.Grid) {
 			continue
 		}
 
-		r := rand.New(rand.NewSource(time.Now().UnixNano()))
-		idx := r.Intn(len(neighbors))
+		idx := bt.r.Intn(len(neighbors))
 		neighbor := neighbors[idx]
 		cell.Link(neighbor)
 	}
