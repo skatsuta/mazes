@@ -19,7 +19,7 @@ func On(grid *maze.Grid) {
 		}
 
 		if len(neighbors) < 1 {
-			return
+			continue
 		}
 
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
