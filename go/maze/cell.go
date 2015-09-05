@@ -1,4 +1,4 @@
-package main
+package maze
 
 const numNeighbors = 4
 
