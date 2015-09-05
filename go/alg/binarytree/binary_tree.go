@@ -25,9 +25,6 @@ func On(grid *maze.Grid) {
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
 		idx := r.Intn(len(neighbors))
 		neighbor := neighbors[idx]
-
-		if neighbor != nil {
-			cell.Link(neighbor)
-		}
+		cell.Link(neighbor)
 	}
 }
