@@ -16,12 +16,12 @@ func TestPrepareGrid(t *testing.T) {
 }
 
 func TestEachCell(t *testing.T) {
-	want := []*Cell{NewCell(0, 0)}
+	want := []*Cell{NewCell(0, 0), NewCell(0, 1), NewCell(1, 0), NewCell(1, 1)}
 
 	grid := &Grid{
-		Rows: 1,
-		Cols: 1,
-		grid: prepareGrid(1, 1),
+		Rows: 2,
+		Cols: 2,
+		grid: prepareGrid(2, 2),
 	}
 	got := grid.EachCell()
 
