@@ -65,10 +65,10 @@ func (g *Grid) EachCell() []*Cell {
 func (g *Grid) configureCells() {
 	for _, cell := range g.EachCell() {
 		row, col := cell.Row, cell.Col
-		cell.North = g.grid[row-1][col]
-		cell.South = g.grid[row+1][col]
-		cell.East = g.grid[row][col+1]
-		cell.West = g.grid[row][col-1]
+		cell.North = g.Get(row-1, col)
+		cell.South = g.Get(row+1, col)
+		cell.East = g.Get(row, col+1)
+		cell.West = g.Get(row, col-1)
 	}
 }
 
