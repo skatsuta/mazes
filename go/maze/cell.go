@@ -12,8 +12,9 @@ type Cell struct {
 // NewCell returns a new Cell put in (row, col).
 func NewCell(row, col int) *Cell {
 	return &Cell{
-		Row: row,
-		Col: col,
+		Row:   row,
+		Col:   col,
+		links: make(map[*Cell]bool),
 	}
 }
 
