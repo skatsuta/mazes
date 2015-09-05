@@ -23,6 +23,8 @@ func main() {
 	switch flag.Arg(0) {
 	case "binarytree":
 		algorithm = alg.NewBinaryTree()
+	case "sidewinder":
+		algorithm = alg.NewSidewinder()
 	}
 
 	algorithm.On(grid)
