@@ -1,6 +1,7 @@
 package maze
 
 import (
+	"bytes"
 	"math/rand"
 	"time"
 )
@@ -60,6 +61,61 @@ func (g *Grid) EachCell() []*Cell {
 		}
 	}
 	return cells
+}
+
+// String draws a maze by an ASCII art.
+func (g *Grid) String() string {
+	var (
+		body   = "   "
+		space  = " "
+		wall   = "|"
+		corner = "+"
+		line   = "---"
+	)
+
+	var output bytes.Buffer
+
+	_, _ = output.WriteString(corner)
+	for i := 0; i < g.Cols; i++ {
+		_, _ = output.WriteString(line + corner)
+	}
+	_, _ = output.WriteString("\n")
+
+	mid := bytes.NewBuffer([]byte(wall))
+	btm := bytes.NewBuffer([]byte(corner))
+	for _, row := range g.EachRow() {
+		// initialize all but the first character
+		mid.Truncate(1)
+		btm.Truncate(1)
+
+		for _, cell := range row {
+			if cell == nil {
+				// dummy cell
+				cell = NewCell(-1, -1)
+			}
+
+			_, _ = mid.WriteString(body)
+			if cell.IsLinked(cell.East) {
+				_, _ = mid.WriteString(space)
+			} else {
+				_, _ = mid.WriteString(wall)
+			}
+
+			if cell.IsLinked(cell.South) {
+				_, _ = btm.WriteString(body)
+			} else {
+				_, _ = btm.WriteString(line)
+			}
+			_, _ = btm.WriteString(corner)
+		}
+
+		_, _ = output.Write(mid.Bytes())
+		_, _ = output.WriteString("\n")
+		_, _ = output.Write(btm.Bytes())
+		_, _ = output.WriteString("\n")
+	}
+
+	return output.String()
 }
 
 func (g *Grid) configureCells() {

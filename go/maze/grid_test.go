@@ -48,3 +48,24 @@ func TestNewGrid(t *testing.T) {
 		t.Errorf("\n got: %v\nwant: %v", got, want)
 	}
 }
+
+func TestString(t *testing.T) {
+	want := `
++---+---+
+|   |   |
++   +   +
+|       |
++---+---+
+`
+
+	grid := NewGrid(2, 2)
+	nw, ne, sw, se := grid.Get(0, 0), grid.Get(0, 1), grid.Get(1, 0), grid.Get(1, 1)
+	nw.Link(sw)
+	sw.Link(se)
+	se.Link(ne)
+	got := "\n" + grid.String()
+
+	if got != want {
+		t.Errorf("\n got: %s\nwant: %s\n", got, want)
+	}
+}
