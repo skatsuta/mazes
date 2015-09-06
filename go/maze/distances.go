@@ -10,7 +10,7 @@ type Distances struct {
 func NewDistances(root *Cell) *Distances {
 	return &Distances{
 		root:  root,
-		cells: make(map[*Cell]int),
+		cells: map[*Cell]int{root: 0},
 	}
 }
 
