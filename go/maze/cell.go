@@ -94,7 +94,7 @@ func (c *Cell) Distances() *Distances {
 
 		for _, cell := range f {
 			for _, linked := range cell.Links() {
-				if n := d.Get(linked); n < 0 {
+				if n := d.Get(linked); n >= 0 {
 					continue
 				}
 				d.Set(linked, d.Get(cell)+1)
