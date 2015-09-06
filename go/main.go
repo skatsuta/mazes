@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
 
 	"github.com/skatsuta/mazes/go/alg"
 	"github.com/skatsuta/mazes/go/maze"
@@ -11,12 +12,28 @@ import (
 var (
 	row, col int
 	dijkstra bool
+	usage    = `Usage: %s [-row n] [-col m] [-dijkstra] algorithm
+
+ALGORITHMS:
+  binarytree
+        binary tree algorithm
+  sidewinder
+        sidewinder algorithm
+
+OPTIONS:
+`
 )
 
 func init() {
 	flag.IntVar(&row, "row", 4, "the number of rows of a maze")
 	flag.IntVar(&col, "col", 4, "the number of columns of a maze")
 	flag.BoolVar(&dijkstra, "dijkstra", false, "show distances using Dijkstra algorthm")
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, usage, os.Args[0])
+		flag.PrintDefaults()
+	}
+
 	flag.Parse()
 }
 
