@@ -19,6 +19,8 @@ ALGORITHMS:
         binary tree algorithm
   sidewinder
         sidewinder algorithm
+  recursivebacktracker
+        recursive backtracker algorithm
 
 OPTIONS:
 `
@@ -56,6 +58,8 @@ func main() {
 		al = alg.NewBinaryTree()
 	case "sidewinder":
 		al = alg.NewSidewinder()
+	case "recursivebacktracker":
+		al = alg.NewRecursiveBacktracker(grid.Random())
 	default:
 		panic("unknown algorithm")
 	}
