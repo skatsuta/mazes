@@ -8,47 +8,48 @@ import (
 	"github.com/skatsuta/mazes/go/maze"
 )
 
-var row, col int
+var (
+	row, col int
+	dijkstra bool
+)
 
 func init() {
 	flag.IntVar(&row, "row", 4, "the number of rows of a maze")
 	flag.IntVar(&col, "col", 4, "the number of columns of a maze")
+	flag.BoolVar(&dijkstra, "dijkstra", false, "show distances using Dijkstra algorthm")
 	flag.Parse()
 }
 
 func main() {
-	mode := flag.Arg(0)
-	switch mode {
-	case "binarytree", "sidewinder":
-		grid(mode)
-	case "dijkstra":
-		distanceGrid(mode)
+	var (
+		grid maze.Grid
+		al   alg.Algorithm
+	)
+
+	// choose grid type
+	if dijkstra {
+		grid = maze.NewDistanceGrid(row, col)
+	} else {
+		grid = maze.NewNormalGrid(row, col)
 	}
-}
 
-func grid(mode string) {
-	grid := maze.NewNormalGrid(row, col)
-
-	var algorithm alg.Algorithm
-	switch mode {
+	// choose algorithm to use
+	switch flag.Arg(0) {
 	case "binarytree":
-		algorithm = alg.NewBinaryTree()
+		al = alg.NewBinaryTree()
 	case "sidewinder":
-		algorithm = alg.NewSidewinder()
+		al = alg.NewSidewinder()
+	default:
+		panic("unknown algorithm")
 	}
 
-	algorithm.On(grid)
-	fmt.Println(grid.String())
-}
+	// generate a maze by al
+	al.On(grid)
 
-func distanceGrid(mode string) {
-	grid := maze.NewDistanceGrid(row, col)
-
-	algorithm := alg.NewBinaryTree()
-
-	algorithm.On(grid)
-	start := grid.Get(0, 0)
-	grid.(*maze.DistanceGrid).Distances = start.Distances()
+	if dijkstra {
+		start := grid.Get(0, 0)
+		grid.(*maze.DistanceGrid).Distances = start.Distances()
+	}
 
 	fmt.Println(grid.String())
 }
