@@ -17,10 +17,20 @@ func init() {
 }
 
 func main() {
-	grid := maze.NewGrid(row, col)
+	mode := flag.Arg(0)
+	switch mode {
+	case "binarytree", "sidewinder":
+		grid(mode)
+	case "dijkstra":
+		distanceGrid(mode)
+	}
+}
+
+func grid(mode string) {
+	grid := maze.NewNormalGrid(row, col)
 
 	var algorithm alg.Algorithm
-	switch flag.Arg(0) {
+	switch mode {
 	case "binarytree":
 		algorithm = alg.NewBinaryTree()
 	case "sidewinder":
@@ -28,5 +38,17 @@ func main() {
 	}
 
 	algorithm.On(grid)
+	fmt.Println(grid.String())
+}
+
+func distanceGrid(mode string) {
+	grid := maze.NewDistanceGrid(row, col)
+
+	algorithm := alg.NewBinaryTree()
+
+	algorithm.On(grid)
+	start := grid.Get(0, 0)
+	grid.(*maze.DistanceGrid).Distances = start.Distances()
+
 	fmt.Println(grid.String())
 }

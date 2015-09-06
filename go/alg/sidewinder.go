@@ -21,7 +21,7 @@ func NewSidewinder() Algorithm {
 }
 
 // On generates a maze on a given grid by using a sidewinder algorithm.
-func (sw sidewinder) On(grid *maze.Grid) {
+func (sw sidewinder) On(grid maze.Grid) {
 	for _, row := range grid.EachRow() {
 		run := make([]*maze.Cell, 0, len(row))
 

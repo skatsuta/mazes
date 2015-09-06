@@ -6,54 +6,76 @@ import (
 	"time"
 )
 
-// Grid is a grid containing all the cells.
-type Grid struct {
-	Rows, Cols int
+// Grid is an interface of grid.
+type Grid interface {
+	Rows() int
+	Cols() int
+	Get(int, int) *Cell
+	Random() *Cell
+	Size() int
+	EachRow() [][]*Cell
+	EachCell() []*Cell
+	String() string
+}
+
+// NormalGrid is a grid containing all the cells.
+type NormalGrid struct {
+	rows, cols int
 	grid       [][]*Cell
 }
 
-// NewGrid returns a new Grid whose size is rows by cols.
-func NewGrid(rows, cols int) *Grid {
-	g := &Grid{
-		Rows: rows,
-		Cols: cols,
+// NewNormalGrid returns a new NormalGrid whose size is rows by cols.
+func NewNormalGrid(rows, cols int) Grid {
+	g := &NormalGrid{
+		rows: rows,
+		cols: cols,
 		grid: prepareGrid(rows, cols),
 	}
 	g.configureCells()
 	return g
 }
 
+// Rows returns the number of rows of `g`.
+func (g *NormalGrid) Rows() int {
+	return g.rows
+}
+
+// Cols returns the number of columns of `g`.
+func (g *NormalGrid) Cols() int {
+	return g.cols
+}
+
 // Get returns a cell on (row, col).
-func (g *Grid) Get(row, col int) *Cell {
-	if row < 0 || row > g.Rows-1 {
+func (g *NormalGrid) Get(row, col int) *Cell {
+	if row < 0 || row > g.rows-1 {
 		return nil
 	}
-	if col < 0 || col > g.Cols-1 {
+	if col < 0 || col > g.cols-1 {
 		return nil
 	}
 	return g.grid[row][col]
 }
 
 // Random returns a cell chosen randomly from a grid.
-func (g *Grid) Random() *Cell {
+func (g *NormalGrid) Random() *Cell {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	row := r.Intn(g.Rows)
-	col := r.Intn(g.Cols)
+	row := r.Intn(g.rows)
+	col := r.Intn(g.cols)
 	return g.Get(row, col)
 }
 
 // Size returns a size of g.
-func (g *Grid) Size() int {
-	return g.Rows * g.Cols
+func (g *NormalGrid) Size() int {
+	return g.rows * g.cols
 }
 
 // EachRow returns each row.
-func (g *Grid) EachRow() [][]*Cell {
+func (g *NormalGrid) EachRow() [][]*Cell {
 	return g.grid
 }
 
 // EachCell returns each cell.
-func (g *Grid) EachCell() []*Cell {
+func (g *NormalGrid) EachCell() []*Cell {
 	cells := make([]*Cell, 0, g.Size())
 	for _, row := range g.grid {
 		for _, cell := range row {
@@ -64,9 +86,8 @@ func (g *Grid) EachCell() []*Cell {
 }
 
 // String draws a maze by an ASCII art.
-func (g *Grid) String() string {
+func (g *NormalGrid) String() string {
 	var (
-		body   = "   "
 		space  = " "
 		wall   = "|"
 		corner = "+"
@@ -76,7 +97,7 @@ func (g *Grid) String() string {
 	var output bytes.Buffer
 
 	_, _ = output.WriteString(corner)
-	for i := 0; i < g.Cols; i++ {
+	for i := 0; i < g.cols; i++ {
 		_, _ = output.WriteString(line + corner)
 	}
 	_, _ = output.WriteString("\n")
@@ -94,6 +115,7 @@ func (g *Grid) String() string {
 				cell = NewCell(-1, -1)
 			}
 
+			body := " " + g.contentsOf(cell) + " "
 			_, _ = mid.WriteString(body)
 			if cell.IsLinked(cell.East) {
 				_, _ = mid.WriteString(space)
@@ -118,7 +140,11 @@ func (g *Grid) String() string {
 	return output.String()
 }
 
-func (g *Grid) configureCells() {
+func (g *NormalGrid) contentsOf(cell *Cell) string {
+	return " "
+}
+
+func (g *NormalGrid) configureCells() {
 	for _, cell := range g.EachCell() {
 		row, col := cell.Row, cell.Col
 		cell.North = g.Get(row-1, col)

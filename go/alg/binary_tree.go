@@ -21,7 +21,7 @@ func NewBinaryTree() Algorithm {
 }
 
 // On generates a maze on a given grid by using a binary tree algorithm.
-func (bt binaryTree) On(grid *maze.Grid) {
+func (bt binaryTree) On(grid maze.Grid) {
 	for _, cell := range grid.EachCell() {
 		var neighbors []*maze.Cell
 		if cell.North != nil {

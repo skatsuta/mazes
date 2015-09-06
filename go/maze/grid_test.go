@@ -18,9 +18,9 @@ func TestPrepareGrid(t *testing.T) {
 func TestEachCell(t *testing.T) {
 	want := []*Cell{NewCell(0, 0), NewCell(0, 1), NewCell(1, 0), NewCell(1, 1)}
 
-	grid := &Grid{
-		Rows: 2,
-		Cols: 2,
+	grid := &NormalGrid{
+		rows: 2,
+		cols: 2,
 		grid: prepareGrid(2, 2),
 	}
 	got := grid.EachCell()
@@ -30,19 +30,19 @@ func TestEachCell(t *testing.T) {
 	}
 }
 
-func TestNewGrid(t *testing.T) {
+func TestNewNormalGrid(t *testing.T) {
 	nw, ne, sw, se := NewCell(0, 0), NewCell(0, 1), NewCell(1, 0), NewCell(1, 1)
 	nw.East, nw.South = ne, sw
 	ne.West, ne.South = nw, se
 	sw.East, sw.North = se, nw
 	se.West, se.North = sw, ne
-	want := &Grid{
-		Rows: 2,
-		Cols: 2,
+	want := &NormalGrid{
+		rows: 2,
+		cols: 2,
 		grid: [][]*Cell{{nw, ne}, {sw, se}},
 	}
 
-	got := NewGrid(2, 2)
+	got := NewNormalGrid(2, 2)
 
 	if !reflect.DeepEqual(got, want) {
 		t.Errorf("\n got: %v\nwant: %v", got, want)
@@ -58,7 +58,7 @@ func TestString(t *testing.T) {
 +---+---+
 `
 
-	grid := NewGrid(2, 2)
+	grid := NewNormalGrid(2, 2)
 	nw, ne, sw, se := grid.Get(0, 0), grid.Get(0, 1), grid.Get(1, 0), grid.Get(1, 1)
 	nw.Link(sw)
 	sw.Link(se)
