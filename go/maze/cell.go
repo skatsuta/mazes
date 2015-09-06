@@ -83,3 +83,27 @@ func (c *Cell) Neighbors() []*Cell {
 
 	return nb
 }
+
+// Distances returns a Distances object that holds distances from `c`.
+func (c *Cell) Distances() *Distances {
+	d := NewDistances(c)
+	f := []*Cell{c}
+
+	for len(f) > 0 {
+		nf := []*Cell{}
+
+		for _, cell := range f {
+			for _, linked := range cell.Links() {
+				if n := d.Get(linked); n < 0 {
+					continue
+				}
+				d.Set(linked, d.Get(cell)+1)
+				nf = append(nf, linked)
+			}
+		}
+
+		f = nf
+	}
+
+	return d
+}
