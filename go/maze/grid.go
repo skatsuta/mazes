@@ -87,8 +87,13 @@ func (g *NormalGrid) EachCell() []*Cell {
 
 // String draws a maze by an ASCII art.
 func (g *NormalGrid) String() string {
+	return g.stringWithContentsFunc(g.contentsOf)
+}
+
+// stringContentsFunc draws a maze by an ASCII art using `f`.
+func (g *NormalGrid) stringWithContentsFunc(f func(*Cell) string) string {
 	var (
-		space  = " "
+		space  = "   "
 		wall   = "|"
 		corner = "+"
 		line   = "---"
@@ -115,16 +120,16 @@ func (g *NormalGrid) String() string {
 				cell = NewCell(-1, -1)
 			}
 
-			body := " " + g.contentsOf(cell) + " "
+			body := " " + f(cell) + " "
 			_, _ = mid.WriteString(body)
 			if cell.IsLinked(cell.East) {
-				_, _ = mid.WriteString(space)
+				_, _ = mid.WriteString(" ")
 			} else {
 				_, _ = mid.WriteString(wall)
 			}
 
 			if cell.IsLinked(cell.South) {
-				_, _ = btm.WriteString(body)
+				_, _ = btm.WriteString(space)
 			} else {
 				_, _ = btm.WriteString(line)
 			}
