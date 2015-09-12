@@ -12,6 +12,7 @@ import (
 var (
 	row, col int
 	dijkstra bool
+	braid    float64
 	usage    = `Usage: %s [-row n] [-col m] [-dijkstra] algorithm
 
 ALGORITHMS:
@@ -30,6 +31,7 @@ func init() {
 	flag.IntVar(&row, "row", 4, "the number of rows of a maze")
 	flag.IntVar(&col, "col", 4, "the number of columns of a maze")
 	flag.BoolVar(&dijkstra, "dijkstra", false, "show distances using Dijkstra algorthm")
+	flag.Float64Var(&braid, "braid", 0.5, "probability of braid")
 
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, usage, os.Args[0])
@@ -66,6 +68,11 @@ func main() {
 
 	// generate a maze by al
 	al.On(grid)
+	fmt.Println(grid.String())
+	fmt.Printf("%d dead-ends\n", len(grid.DeadEnds()))
+
+	// braid
+	grid.Braid(braid)
 
 	if dijkstra {
 		start := grid.Get(0, 0)
