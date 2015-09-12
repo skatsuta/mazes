@@ -1,5 +1,7 @@
 package maze
 
+import "math/rand"
+
 const numNeighbors = 4
 
 // Cell is a cell in a maze.
@@ -106,4 +108,15 @@ func (c *Cell) Distances() *Distances {
 	}
 
 	return d
+}
+
+// Shuffle shuffles cells.
+func Shuffle(cells []*Cell) []*Cell {
+	l := len(cells)
+	ids := rand.Perm(l)
+	shfl := make([]*Cell, l)
+	for i, v := range ids {
+		shfl[i] = cells[v]
+	}
+	return shfl
 }
