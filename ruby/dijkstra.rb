@@ -8,4 +8,6 @@ start = grid[0, 0]
 distances = start.distances
 
 grid.distances = distances
+grid.braid 1.0
 puts grid
+puts "#{grid.deadends.count} dead ends"
