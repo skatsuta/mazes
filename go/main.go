@@ -73,4 +73,5 @@ func main() {
 	}
 
 	fmt.Println(grid.String())
+	fmt.Printf("%d dead-ends\n", len(grid.DeadEnds()))
 }
