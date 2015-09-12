@@ -17,12 +17,14 @@ type Grid interface {
 	EachCell() []*Cell
 	String() string
 	DeadEnds() []*Cell
+	Braid(float64)
 }
 
 // NormalGrid is a grid containing all the cells.
 type NormalGrid struct {
 	rows, cols int
 	grid       [][]*Cell
+	r          *rand.Rand
 }
 
 // NewNormalGrid returns a new NormalGrid whose size is rows by cols.
@@ -31,6 +33,7 @@ func NewNormalGrid(rows, cols int) Grid {
 		rows: rows,
 		cols: cols,
 		grid: prepareGrid(rows, cols),
+		r:    rand.New(rand.NewSource(time.Now().UnixNano())),
 	}
 	g.configureCells()
 	return g
@@ -171,6 +174,35 @@ func (g *NormalGrid) DeadEnds() []*Cell {
 	}
 
 	return list
+}
+
+// Braid rearranges g to "braid" one, that is, a maze without any dead ends.
+func (g *NormalGrid) Braid(p float64) {
+	for _, cell := range Shuffle(g.DeadEnds()) {
+		if len(cell.Links()) != 1 || g.r.Float64() > p {
+			continue
+		}
+
+		var nbs, best []*Cell
+		for _, nb := range cell.Neighbors() {
+			if !nb.IsLinked(cell) {
+				nbs = append(nbs, nb)
+			}
+		}
+
+		for _, n := range nbs {
+			if len(n.Links()) == 1 {
+				best = append(best, n)
+			}
+		}
+
+		if len(best) == 0 {
+			best = nbs
+		}
+
+		idx := g.r.Intn(len(best))
+		cell.Link(best[idx])
+	}
 }
 
 // prepareGrid returns a rows-by-cols 2D Cell array.
