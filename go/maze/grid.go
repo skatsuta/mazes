@@ -16,6 +16,7 @@ type Grid interface {
 	EachRow() [][]*Cell
 	EachCell() []*Cell
 	String() string
+	DeadEnds() []*Cell
 }
 
 // NormalGrid is a grid containing all the cells.
@@ -157,6 +158,19 @@ func (g *NormalGrid) configureCells() {
 		cell.East = g.Get(row, col+1)
 		cell.West = g.Get(row, col-1)
 	}
+}
+
+// DeadEnds returns all the dead-end cells.
+func (g *NormalGrid) DeadEnds() []*Cell {
+	var list []*Cell
+
+	for _, cell := range g.EachCell() {
+		if len(cell.Links()) == 1 {
+			list = append(list, cell)
+		}
+	}
+
+	return list
 }
 
 // prepareGrid returns a rows-by-cols 2D Cell array.
